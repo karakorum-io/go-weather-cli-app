@@ -15,12 +15,44 @@ import (
 func main() {
 	color.Blue("Karakorum Weather Software")
 
-	q := "agra"
+	var run bool = true
 
-	if len(os.Args) >= 2 {
-		q = os.Args[1]
+	for run {
+
+		q := "agra"
+
+		if len(os.Args) >= 2 {
+			q = os.Args[1]
+		}
+
+		getWeather(q)
+
+		fmt.Println("Continue? Y/N")
+		option := scanValue()
+
+		if option == "N" || option == "n" {
+			run = false
+		} else {
+			fmt.Println("Location?")
+			location := scanValue()
+			getWeather(location)
+		}
+	}
+}
+
+func scanValue() string {
+	var input string
+
+	_, err := fmt.Scanln(&input)
+
+	if err != nil {
+		fmt.Println("Error:", err)
 	}
 
+	return input
+}
+
+func getWeather(q string) {
 	res, err := http.Get("http://api.weatherapi.com/v1/forecast.json?key=503ee91321924099894192614241903&q=" + q + "&days=1&aqi=no&alerts=no")
 
 	if err != nil {
